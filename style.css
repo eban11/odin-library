@@ -1,0 +1,149 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+}
+
+header {
+  padding: 20px;
+}
+
+main {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.container {
+  width: 90%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card {
+  display: flex;
+  justify-content: space-between;
+  width: 33%;
+  padding: 20px;
+  color: #fff;
+  margin: 20px 2px;
+}
+
+.card:nth-child(even) {
+  background-image: radial-gradient(
+    circle,
+    #e767ae,
+    #e962aa,
+    #eb5ca5,
+    #ec56a1,
+    #ee509c
+  );
+}
+
+.card:nth-child(odd) {
+  background-image: radial-gradient(
+    circle,
+    #6a96d6,
+    #6690d4,
+    #628bd2,
+    #5e85cf,
+    #5b7fcd
+  );
+}
+
+.book-image {
+  width: 40%;
+  margin-bottom: -30px;
+  box-shadow: -2px 6px 19px 0px #6d6e79;
+  border: 2px dotted rgb(200, 200, 200);
+  border-radius: 5px;
+  background-color: #fff;
+  position: relative;
+  font-family: "Roboto", sans-serif;
+}
+
+img:before {
+  content: "";
+  display: block;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 5px;
+}
+
+img:after {
+  content: attr(alt);
+  display: block;
+  margin-top: 50px;
+  font-size: 16px;
+  font-style: normal;
+  color: rgba(100, 100, 100, 0.575);
+
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.info {
+  padding-left: 20px;
+  width: 60%;
+}
+
+.info > div {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 400;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.info > p {
+  margin-bottom: 10px;
+}
+
+.info > button {
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.815);
+  border: none;
+  display: block;
+  margin: 20px auto;
+  border-radius: 10px;
+  width: 80%;
+  outline: none;
+  cursor: pointer;
+  box-shadow: -2px 6px 10px 0px #6d6e79;
+}
+
+.info > button:hover {
+  background-color: #fff;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.pages {
+  margin-left: 8px;
+}
+
+.read {
+  font-size: 15px;
+  font-weight: 500;
+  text-align: center;
+  padding: 10px 0;
+}
