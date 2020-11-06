@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap");
 
 * {
   margin: 0;
@@ -11,7 +12,50 @@ body {
 }
 
 header {
-  padding: 20px;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid lightgray;
+  background-color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+header div {
+  display: flex;
+  align-items: center;
+}
+
+header a {
+  text-decoration: none;
+  display: block;
+  padding: 10px;
+  color: rgb(87, 87, 87);
+  font-weight: 500;
+}
+
+header .active {
+  color: #ec5d97;
+}
+
+header a:hover {
+  color: #ec5d97;
+}
+
+header h1 {
+  font-family: "Dancing Script", cursive;
+  font-size: 46px;
+  padding: 10px;
+}
+
+.add-book {
+  margin-right: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  color: #3d9c72;
 }
 
 main {
@@ -19,10 +63,12 @@ main {
   display: flex;
   justify-content: center;
   margin-top: 20px;
+  position: relative;
+  top: 70px;
 }
 
 .container {
-  width: 90%;
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -31,24 +77,13 @@ main {
 .card {
   display: flex;
   justify-content: space-between;
-  width: 33%;
+  min-width: 380px;
+  width: 31%;
   padding: 20px;
+  padding-top: 30px;
   color: #fff;
-  margin: 20px 2px;
-}
-
-.card:nth-child(even) {
-  background-image: radial-gradient(
-    circle,
-    #e767ae,
-    #e962aa,
-    #eb5ca5,
-    #ec56a1,
-    #ee509c
-  );
-}
-
-.card:nth-child(odd) {
+  margin: 30px 0.5%;
+  border-radius: 5px;
   background-image: radial-gradient(
     circle,
     #6a96d6,
@@ -56,6 +91,18 @@ main {
     #628bd2,
     #5e85cf,
     #5b7fcd
+  );
+  position: relative;
+}
+
+.done {
+  background-image: radial-gradient(
+    circle,
+    #e767ae,
+    #e962aa,
+    #eb5ca5,
+    #ec56a1,
+    #ee509c
   );
 }
 
@@ -98,12 +145,30 @@ img:after {
   text-align: center;
 }
 
-.info {
+.book-menu {
+  padding: 0 10px;
+  display: flex;
+  position: absolute;
+  color: #fff;
+  top: 0;
+  right: 0;
+}
+
+.book-menu p {
+  padding: 5px 8px;
+  cursor: pointer;
+}
+
+.book-menu p:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.book-info {
   padding-left: 20px;
   width: 60%;
 }
 
-.info > div {
+.book-info > div {
   display: flex;
   justify-content: space-between;
   font-weight: 400;
@@ -111,12 +176,12 @@ img:after {
   margin-bottom: 10px;
 }
 
-.info > p {
+.book-info > p {
   margin-bottom: 10px;
 }
 
-.info > button {
-  padding: 20px;
+.book-info > button {
+  padding: 20px 10px;
   background-color: rgba(255, 255, 255, 0.815);
   border: none;
   display: block;
@@ -128,7 +193,7 @@ img:after {
   box-shadow: -2px 6px 10px 0px #6d6e79;
 }
 
-.info > button:hover {
+.book-info > button:hover {
   background-color: #fff;
 }
 
@@ -146,4 +211,122 @@ img:after {
   font-weight: 500;
   text-align: center;
   padding: 10px 0;
+}
+
+.form-container {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.815);
+  display: none;
+}
+
+.form-container-active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-container form {
+  width: 60%;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+form h1 {
+  margin-bottom: 20px;
+  border-bottom: 1px solid lightgray;
+}
+
+form div {
+  margin: 10px 0;
+  display: flex;
+  width: 100%;
+  align-items: flex-end;
+}
+
+form label {
+  font-weight: 500;
+  font-size: 15px;
+  text-align: right;
+  display: block;
+  width: 30%;
+}
+
+form input {
+  outline: none;
+  font-size: 14px;
+  padding: 5px;
+  margin: 0 15px;
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  display: block;
+  width: 70%;
+}
+
+form div:last-child {
+  justify-content: flex-end;
+  padding: 10px 15px;
+}
+
+.submit {
+  width: 100px;
+  display: block;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #3d9c72;
+  color: #fff;
+  font-size: 15px;
+  outline: none;
+  cursor: pointer;
+}
+
+.util-dim {
+  color: rgb(189, 187, 187);
+}
+
+@media only screen and (max-width: 880px) {
+  form label {
+    width: 40%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  header {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  header h1 {
+    font-size: 30px;
+  }
+
+  form div {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  form label {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 10px;
+  }
+
+  form input {
+    width: 95%;
+  }
+
+  form div:last-child {
+    align-items: flex-end;
+    padding-right: 0;
+  }
 }

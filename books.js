@@ -1,4 +1,7 @@
 const container = document.querySelector(".container");
+const bookFormContainer = document.querySelector(".form-container");
+const bookForm = document.querySelector(".form-container form");
+
 const myLibrary = [];
 
 function Book(title, author, pages, image, read) {
@@ -140,3 +143,12 @@ function deleteBook(i) {
   const card = document.querySelector(`.card[data-index='${i}']`);
   card.remove();
 }
+
+function toggleBookForm(e) {
+  if (!bookForm.contains(e.target)) {
+    bookFormContainer.classList.toggle("form-container-active");
+  }
+}
+
+document.querySelector(".add-book").addEventListener("click", toggleBookForm);
+bookFormContainer.addEventListener("click", toggleBookForm);
