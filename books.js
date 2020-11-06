@@ -25,17 +25,24 @@ function sanitizeHTML(content) {
   return temp.innerHTML;
 }
 
-function displayBooks() {
-  myLibrary.forEach((book, i) => {
-    const card = document.createElement("div");
-    card.classList.add("card");
-    card.innerHTML = `
+function createCard(book, i) {
+  const card = document.createElement("div");
+  card.classList.add("card");
+  card.dataset.index = i;
+  if (book.isRead) {
+    card.classList.add("done");
+  }
+  card.innerHTML = `
+    <div class='book-menu'>
+      <p class='delete' onClick='deleteBook(${i})'><i class="fa fa-trash-o" aria-hidden="true"></i></p>
+      <p class='edit'><i class="fa fa-pencil" aria-hidden="true"></i></p>
+    </div>
     <img
       src=${sanitizeHTML(book.image) || "no image"}
       alt='${sanitizeHTML(book.title)}'
       class="book-image"
     />
-    <div class="info">
+    <div class="book-info">
       <p class="title">${sanitizeHTML(book.title)}</p>
       <div>
         <p class="author">by ${sanitizeHTML(book.author)}</p>
@@ -45,11 +52,17 @@ function displayBooks() {
         book.isRead ? "You have read this one." : "You haven't read this yet."
       }</p>
       <button data-index='${i}' onClick='markAsRead(${i})'>${
-      book.isRead ? "No I haven't read it!" : "I read this!"
-    }</button>
+    book.isRead ? "No, haven't read this!" : "I read this!"
+  }</button>
     </div>
     
   `;
+  return card;
+}
+
+function displayBooks() {
+  myLibrary.forEach((book, i) => {
+    const card = createCard(book, i);
     container.appendChild(card);
   });
 }
@@ -77,13 +90,42 @@ addBookToLibrary(
   "https://images-na.ssl-images-amazon.com/images/I/81af+MCATTL.jpg",
   true
 );
+addBookToLibrary(
+  "The Great Gatsby",
+  "F.Scott Fitzgerald",
+  340,
+  "https://images-na.ssl-images-amazon.com/images/I/81af+MCATTL.jpg",
+  true
+);
+addBookToLibrary(
+  "The Great Gatsby",
+  "F.Scott Fitzgerald",
+  340,
+  "https://images-na.ssl-images-amazon.com/images/I/81af+MCATTL.jpg",
+  true
+);
+addBookToLibrary(
+  "The Great Gatsby",
+  "F.Scott Fitzgerald",
+  340,
+  "https://images-na.ssl-images-amazon.com/images/I/81af+MCATTL.jpg",
+  true
+);
+addBookToLibrary(
+  "The Great Gatsby",
+  "F.Scott Fitzgerald",
+  340,
+  "https://images-na.ssl-images-amazon.com/images/I/81af+MCATTL.jpg",
+  true
+);
 displayBooks();
 
 function markAsRead(i) {
   const book = myLibrary[i];
   book.isRead = !book.isRead;
 
-  const card = document.querySelectorAll(".card")[i];
+  const card = document.querySelector(`.card[data-index='${i}']`);
+  card.classList.toggle("done");
   const button = card.querySelector("button");
   const read = card.querySelector(".read");
 
@@ -91,5 +133,10 @@ function markAsRead(i) {
     ? "You have read this one!"
     : "You haven't read this yet!";
 
-  button.textContent = book.isRead ? "No I haven't read it!" : "I read it!";
+  button.textContent = book.isRead ? "No, haven't read this!" : "I read this!";
+}
+
+function deleteBook(i) {
+  const card = document.querySelector(`.card[data-index='${i}']`);
+  card.remove();
 }
