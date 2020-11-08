@@ -32,7 +32,7 @@
           <label for="title">Book Title :</label>
           <input
             type="text"
-            name=""
+            name="title"
             id="title"
             placeholder="What is the book called?"
             required
@@ -43,7 +43,7 @@
           <label for="author">Book Author :</label>
           <input
             type="text"
-            name=""
+            name="author"
             id="author"
             placeholder="Who wrote the book?"
             required
@@ -56,9 +56,9 @@
           >
           <input
             type="text"
-            name=""
+            name="image"
             id="image"
-            placeholder="https://somesite.com/someimage..."
+            placeholder="The image link (https://...)"
           />
         </div>
 
@@ -66,11 +66,23 @@
           <label for="pages">Book Pages :</label>
           <input
             type="number"
-            name=""
+            name="pages"
             id="pages"
             placeholder="How many pages does the book have?"
             required
           />
+        </div>
+
+        <div class="radios">
+          <label for="">Have you read it? :</label>
+          <div>
+            <input type="radio" name="read" id="read-yes" checked />
+            <label for="read-yes">Yes</label>
+          </div>
+          <div>
+            <input type="radio" name="read" id="read-no" />
+            <label for="read-no">No</label>
+          </div>
         </div>
 
         <div>
@@ -78,6 +90,10 @@
         </div>
       </form>
     </div>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-firestore.js"></script>
     <script src="books.js"></script>
   </body>
 </html>
