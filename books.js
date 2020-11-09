@@ -1,44 +1,3 @@
-var firebaseConfig = {
-  apiKey: "AIzaSyCiyTfHz3syINWxcz8hM9Kri6iZb-JgfwE",
-  authDomain: "odin-library-46ed9.firebaseapp.com",
-  databaseURL: "https://odin-library-46ed9.firebaseio.com",
-  projectId: "odin-library-46ed9",
-  storageBucket: "odin-library-46ed9.appspot.com",
-  messagingSenderId: "297060438464",
-  appId: "1:297060438464:web:e4cd869a7e91dd2ea0f825",
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-const container = document.querySelector(".container");
-const bookFormContainer = document.querySelector(".form-container");
-const bookForm = document.querySelector(".form-container form");
-const titleBox = document.getElementById("title");
-const authorBox = document.getElementById("author");
-const imageBox = document.getElementById("image");
-const pagesBox = document.getElementById("pages");
-const yesRead = document.getElementById("read-yes");
-
-const myLibrary = [];
-
-db.collection("books")
-  .get()
-  .then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-      const book = doc.data();
-      addBookToLibrary(
-        doc.id,
-        book.title,
-        book.author,
-        book.pages,
-        book.image,
-        book.isRead
-      );
-    });
-    displayBooks();
-  });
-
 function Book(id, title, author, pages, image, read) {
   this.id = id;
   this.title = title;
@@ -57,6 +16,26 @@ Book.prototype.info = function () {
 Book.prototype.changeReadStatus = function () {
   this.isRead = !this.isRead;
 };
+
+const container = document.querySelector(".container");
+const myLibrary = [];
+
+db.collection("books")
+  .get()
+  .then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      const book = doc.data();
+      addBookToLibrary(
+        doc.id,
+        book.title,
+        book.author,
+        book.pages,
+        book.image,
+        book.isRead
+      );
+    });
+    displayBooks();
+  });
 
 function addBookToLibrary(id, title, author, pages, image, isRead) {
   const book = new Book(id, title, author, pages, image, isRead);
@@ -149,53 +128,61 @@ function deleteBook(id) {
       card.remove();
     });
 }
-4;
-
-function resetForm() {
-  titleBox.value = "";
-  authorBox.value = "";
-  pagesBox.value = "";
-  imageBox.value = "";
-  yesRead.checked = true;
-}
 
 function addBook(e) {
   e.preventDefault();
+  const bookFormContainer = document.querySelector("#book-add-form");
+  const bookForm = bookFormContainer.querySelector("form");
+
+  const title = bookForm["title"].value;
+  const author = bookForm["author"].value;
+  const image = bookForm["image"].value;
+  const pages = bookForm["pages"].value;
+  const isRead = bookForm["read-yes"].checked ? true : false;
 
   db.collection("books")
     .add({
-      title: titleBox.value,
-      author: authorBox.value,
-      pages: pagesBox.value,
-      image: imageBox.value,
-      isRead: yesRead.checked ? true : false,
+      title,
+      author,
+      pages,
+      image,
+      isRead,
     })
     .then((docRef) => {
       const book = addBookToLibrary(
         docRef.id,
-        titleBox.value,
-        authorBox.value,
-        pagesBox.value,
-        imageBox.value,
-        yesRead.checked ? true : false
+        title,
+        author,
+        pages,
+        image,
+        isRead
       );
-
-      console.log(book);
 
       const card = createCard(book, myLibrary.length - 1);
       container.prepend(card);
 
-      resetForm();
+      bookForm.reset();
       bookFormContainer.classList.toggle("form-container-active");
     });
 }
 
-function toggleBookForm(e) {
-  if (!bookForm.contains(e.target)) {
-    bookFormContainer.classList.toggle("form-container-active");
+function activateFormContainer(e) {
+  const container = document.querySelector(`#${e.target.dataset.target}`);
+  container.classList.add("form-container-active");
+}
+
+function deactivateFormContainer(e) {
+  if (e.target.classList.contains("form-container")) {
+    e.target.classList.remove("form-container-active");
   }
 }
 
-document.querySelector(".add-book").addEventListener("click", toggleBookForm);
-bookFormContainer.addEventListener("click", toggleBookForm);
-bookForm.addEventListener("submit", addBook);
+document.querySelectorAll(".modal-trigger").forEach((trigger) => {
+  trigger.addEventListener("click", activateFormContainer);
+});
+
+document.querySelectorAll(".form-container").forEach((container) => {
+  container.addEventListener("click", deactivateFormContainer);
+});
+
+document.querySelector("#book-add-form").addEventListener("submit", addBook);

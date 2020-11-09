@@ -14,17 +14,94 @@
     <header>
       <h1>My Library</h1>
       <div>
-        <i class="fa fa-plus-square add-book" aria-hidden="true"></i>
+        <i
+          class="fa fa-plus-square add-book-btn modal-trigger"
+          aria-hidden="true"
+          data-target="book-add-form"
+        ></i>
         <a href="index.html" class="active">My List</a>
         <a href="index.html">All Books</a>
-        <a href="index.html">Sign Out</a>
+        <a href="#" class="signIn-btn modal-trigger" data-target="signIn-form"
+          >Sign in</a
+        >
+        <a href="#" class="signUp-btn modal-trigger" data-target="signUp-form"
+          >Sign up</a
+        >
+        <a href="#">Sign Out</a>
       </div>
     </header>
     <main>
       <div class="container"></div>
     </main>
 
-    <div class="form-container">
+    <!-- Sign up form -->
+    <div class="form-container" id="signUp-form">
+      <form>
+        <h1>Sign Up</h1>
+
+        <div>
+          <label for="signup-email">Email :</label>
+          <input
+            type="email"
+            name="signup-email"
+            id="signup-email"
+            placeholder="Email"
+            required
+          />
+        </div>
+
+        <div>
+          <label for="password">Password :</label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="password"
+            required
+          />
+        </div>
+
+        <div>
+          <button class="submit">Sign Up</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Login form  -->
+    <div class="form-container" id="signIn-form">
+      <form>
+        <h1>Login</h1>
+
+        <div>
+          <label for="login-email">Email :</label>
+          <input
+            type="email"
+            name="login-email"
+            id="login-email"
+            placeholder="Email"
+            required
+          />
+        </div>
+
+        <div>
+          <label for="login-password">Password :</label>
+          <input
+            type="login-password"
+            name="login-password"
+            id="login-password"
+            placeholder="login-password"
+            required
+          />
+        </div>
+
+        <div>
+          <button class="submit">Login</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Book Add and edit form -->
+    <div class="form-container" id="book-add-form">
       <form>
         <h1>Add Book</h1>
 
@@ -94,6 +171,8 @@
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-auth.js"></script>
+    <script src="firebase.js"></script>
     <script src="books.js"></script>
   </body>
 </html>
