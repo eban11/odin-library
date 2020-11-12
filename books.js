@@ -1,46 +1,28 @@
-function Book(id, title, author, pages, image, read) {
-  this.id = id;
-  this.title = title;
-  this.author = author;
-  this.pages = pages;
-  this.image = image;
-  this.isRead = read;
-}
-
-Book.prototype.info = function () {
-  return `${this.title} by ${this.author}, ${this.pages} pages, ${
-    this.isRead ? "read already" : "not read yet"
-  }`;
-};
-
-Book.prototype.changeReadStatus = function () {
-  this.isRead = !this.isRead;
-};
-
 const container = document.querySelector(".container");
-const myLibrary = [];
+const loggedInLinks = document.querySelectorAll(".logged-in");
+const loggedOutLinks = document.querySelectorAll(".logged-out");
+const editForm = document.querySelector("#book-edit-form form");
 
-db.collection("books")
-  .get()
-  .then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-      const book = doc.data();
-      addBookToLibrary(
-        doc.id,
-        book.title,
-        book.author,
-        book.pages,
-        book.image,
-        book.isRead
-      );
-    });
-    displayBooks();
-  });
+function setupUI(user) {
+  if (user) {
+    loggedInLinks.forEach((link) => (link.style.display = "block"));
+    loggedOutLinks.forEach((link) => (link.style.display = "none"));
 
-function addBookToLibrary(id, title, author, pages, image, isRead) {
-  const book = new Book(id, title, author, pages, image, isRead);
-  myLibrary.push(book);
-  return book;
+    db.collection("books").onSnapshot(
+      (querySnapshot) => {
+        displayBooks(querySnapshot.docs);
+      },
+      (err) => {
+        console.log(err.message);
+      }
+    );
+  } else {
+    container.innerHTML =
+      "<h1 class='message'>Sign In or Sign Up to see the books</h1>";
+
+    loggedInLinks.forEach((link) => (link.style.display = "none"));
+    loggedOutLinks.forEach((link) => (link.style.display = "block"));
+  }
 }
 
 function sanitizeHTML(content) {
@@ -49,83 +31,84 @@ function sanitizeHTML(content) {
   return temp.innerHTML;
 }
 
-function displayBooks() {
-  myLibrary.forEach((book) => {
-    const card = createCard(book);
-    container.appendChild(card);
+function displayBooks(docs) {
+  let html = ``;
+  docs.forEach((doc) => {
+    html += createCard(doc);
   });
+  container.innerHTML = html;
 }
 
-function createCard(book) {
-  const card = document.createElement("div");
-  card.classList.add("card");
-  card.dataset.id = book.id;
-  if (book.isRead) {
-    card.classList.add("done");
+function bookMenu(doc) {
+  if (doc.data().createdBy === userId) {
+    return `
+            <div class='book-menu'>
+                  <p class='delete' onClick='deleteBook("${doc.id}")'><i class="fa fa-trash-o" aria-hidden="true"></i></p>
+                  <p class='edit' onClick='activateEditBook("${doc.id}")'><i class="fa fa-pencil" aria-hidden="true"></i></p>
+                </div>
+            `;
+  } else {
+    return "";
   }
-  card.innerHTML = `
-    <div class='book-menu'>
-      <p class='delete' onClick='deleteBook("${
-        book.id
-      }")'><i class="fa fa-trash-o" aria-hidden="true"></i></p>
-      <p class='edit'><i class="fa fa-pencil" aria-hidden="true"></i></p>
-    </div>
-    <img
-      src=${sanitizeHTML(book.image) || "no image"}
-      alt='${sanitizeHTML(book.title)}'
-      class="book-image"
-    />
-    <div class="book-info">
-      <p class="title">${sanitizeHTML(book.title)}</p>
-      <div>
-        <p class="author">by ${sanitizeHTML(book.author)}</p>
-        <p class="pages">${sanitizeHTML(book.pages)} pages</p>
-      </div>
-      <p class="read">${
-        book.isRead ? "You have read this one." : "You haven't read this yet."
-      }</p>
-      <button onClick='markAsRead("${book.id}")'>${
+}
+
+function createCard(doc) {
+  const book = doc.data();
+
+  card = `
+    <div class="card ${book.isRead ? "done" : ""}" data-id="${doc.id}">
+      ${bookMenu(doc)}
+      <img
+        src=${sanitizeHTML(book.image) || "no image"}
+        alt='${sanitizeHTML(book.title)}'
+        class="book-image"
+      />
+      <div class="book-info">
+        <p class="title">${sanitizeHTML(book.title)}</p>
+        <div>
+          <p class="author">by ${sanitizeHTML(book.author)}</p>
+          <p class="pages">${sanitizeHTML(book.pages)} pages</p>
+        </div>
+        <p class="read">${
+          book.isRead ? "You have read this one." : "You haven't read this yet."
+        }</p>
+        <button onClick='markAsRead("${doc.id}")'>${
     book.isRead ? "No, haven't read this!" : "I read this!"
   }</button>
+      </div>
     </div>
-    
   `;
   return card;
 }
 
 function markAsRead(id) {
-  const book = myLibrary.filter((b) => b.id === id)[0];
-
-  db.collection("books")
-    .doc(id)
-    .update({
-      isRead: !book.isRead,
-    })
-    .then(() => {
-      book.changeReadStatus();
-
-      const card = document.querySelector(`.card[data-id='${id}']`);
-      card.classList.toggle("done");
-      const button = card.querySelector("button");
-      const read = card.querySelector(".read");
-
-      read.textContent = book.isRead
-        ? "You have read this one!"
-        : "You haven't read this yet!";
-
-      button.textContent = book.isRead
-        ? "No, haven't read this!"
-        : "I read this!";
-    });
+  isRead = document
+    .querySelector(`.card[data-id='${id}']`)
+    .classList.contains("done")
+    ? false
+    : true;
+  db.collection("books").doc(id).update({
+    isRead,
+  });
 }
 
 function deleteBook(id) {
+  db.collection("books").doc(id).delete();
+}
+
+function activateEditBook(id) {
   db.collection("books")
     .doc(id)
-    .delete()
-    .then(() => {
-      const card = document.querySelector(`.card[data-id='${id}']`);
-      card.remove();
+    .get()
+    .then((doc) => {
+      const bookData = doc.data();
+      editForm.dataset.bookId = doc.id;
+      editForm["edit-title"].value = bookData.title;
+      editForm["edit-author"].value = bookData.author;
+      editForm["edit-image"].value = bookData.image || "";
+      editForm["edit-pages"].value = bookData.pages;
+
+      editForm.parentElement.classList.add("form-container-active");
     });
 }
 
@@ -147,22 +130,11 @@ function addBook(e) {
       pages,
       image,
       isRead,
+      createdBy: userId,
     })
-    .then((docRef) => {
-      const book = addBookToLibrary(
-        docRef.id,
-        title,
-        author,
-        pages,
-        image,
-        isRead
-      );
-
-      const card = createCard(book, myLibrary.length - 1);
-      container.prepend(card);
-
-      bookForm.reset();
+    .then(() => {
       bookFormContainer.classList.toggle("form-container-active");
+      bookForm.reset();
     });
 }
 
@@ -186,3 +158,20 @@ document.querySelectorAll(".form-container").forEach((container) => {
 });
 
 document.querySelector("#book-add-form").addEventListener("submit", addBook);
+
+editForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const docId = editForm.dataset.bookId;
+  db.collection("books")
+    .doc(docId)
+    .update({
+      title: editForm["edit-title"].value,
+      author: editForm["edit-author"].value,
+      image: editForm["edit-image"].value,
+      pages: editForm["edit-pages"].value,
+    })
+    .then(() => {
+      editForm.parentElement.classList.remove("form-container-active");
+      editForm.reset();
+    });
+});

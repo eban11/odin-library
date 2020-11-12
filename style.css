@@ -31,7 +31,6 @@ header div {
 
 header a {
   text-decoration: none;
-  display: block;
   padding: 10px;
   color: rgb(87, 87, 87);
   font-weight: 500;
@@ -72,6 +71,12 @@ main {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+.message {
+  color: rgb(141, 138, 138);
+  margin-top: 15%;
+  padding: 20px;
 }
 
 .card {

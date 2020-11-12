@@ -11,13 +11,41 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
+let userId;
 
-function signIn(e) {
-  e.preventDefault();
-  console.log("Signed in");
-}
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    userId = user.uid;
+  }
+  setupUI(user);
+});
 
-function signUp(e) {
+const signInForm = document.querySelector("#signIn-form form");
+signInForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  console.log("Signed up");
-}
+
+  const email = signInForm["login-email"].value;
+  const password = signInForm["login-password"].value;
+
+  auth.signInWithEmailAndPassword(email, password).then((cred) => {
+    signInForm.reset();
+    signInForm.parentElement.classList.remove("form-container-active");
+  });
+});
+
+const signUpForm = document.querySelector("#signUp-form form");
+signUpForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const email = signUpForm["signUp-email"].value;
+  const password = signUpForm["signUp-password"].value;
+
+  auth.createUserWithEmailAndPassword(email, password).then((cred) => {
+    signUpForm.reset();
+    signUpForm.parentElement.classList.remove("form-container-active");
+  });
+});
+
+document.querySelector("#logout-btn").addEventListener("click", (e) => {
+  e.preventDefault();
+  auth.signOut();
+});
